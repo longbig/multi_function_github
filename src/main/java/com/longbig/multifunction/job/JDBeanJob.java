@@ -1,5 +1,7 @@
 package com.longbig.multifunction.job;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.FormBody;
@@ -55,26 +57,31 @@ public class JDBeanJob {
      */
     @Scheduled(cron = "0 0 7 1/1 * ?")
     public String getSharkBean() throws Exception {
+        for (int i = 1; i < 8; i++) {
+            String url = "https://api.m.jd.com/?appid=sharkBean&functionId=pg_interact_interface_invoke&body=%7B%22floorToken%22:%22f1d574ec-b1e9-43ba-aa84-b7a757f27f0e%22,%22dataSourceCode%22:%22signIn%22,%22argMap%22:%7B%22currSignCursor%22:" +
+                    i +
+                    "%7D,%22riskInformation%22:%7B%22platform%22:1,%22pageClickKey%22:%22%22,%22eid%22:%227IJ4SBWVAY6L5FOEQHCBZ57B3CYAYAA4LGJH2NGO6F6BE7PLEAJUY5WQOUI4BDGFRPH3RSGPLV5APHF4YV4DMJZ2UQ%22,%22fp%22:%22e0e4fadfadac7be71f89b78901f60fe4%22,%22shshshfp%22:%2298d7f7d062531be7af606b13b9c57a3e%22,%22shshshfpa%22:%222768c811-4a2f-1596-cf01-9d0cbd0319b9-1651280386%22,%22shshshfpb%22:%22iMZyawmZjTHrSJ72sZmuHog%22%7D%7D";
 
-        String url = "https://api.m.jd.com/?appid=sharkBean&functionId=pg_interact_interface_invoke&body=%7B%22floorToken%22:%22f1d574ec-b1e9-43ba-aa84-b7a757f27f0e%22,%22dataSourceCode%22:%22signIn%22,%22argMap%22:%7B%22currSignCursor%22:" +
-                "2" +
-                "%7D,%22riskInformation%22:%7B%22platform%22:1,%22pageClickKey%22:%22%22,%22eid%22:%227IJ4SBWVAY6L5FOEQHCBZ57B3CYAYAA4LGJH2NGO6F6BE7PLEAJUY5WQOUI4BDGFRPH3RSGPLV5APHF4YV4DMJZ2UQ%22,%22fp%22:%22e0e4fadfadac7be71f89b78901f60fe4%22,%22shshshfp%22:%2298d7f7d062531be7af606b13b9c57a3e%22,%22shshshfpa%22:%222768c811-4a2f-1596-cf01-9d0cbd0319b9-1651280386%22,%22shshshfpb%22:%22iMZyawmZjTHrSJ72sZmuHog%22%7D%7D";
+            String cookie = "__jd_ref_cls=; mba_muid=16504967721461800060416.99.1651285154110; mba_sid=99.4; shshshfpa=2768c811-4a2f-1596-cf01-9d0cbd0319b9-1651280386; shshshfpb=iMZyawmZjTHrSJ72sZmuHog; 3AB9D23F7A4B3C9B=7IJ4SBWVAY6L5FOEQHCBZ57B3CYAYAA4LGJH2NGO6F6BE7PLEAJUY5WQOUI4BDGFRPH3RSGPLV5APHF4YV4DMJZ2UQ; _gia_s_e_joint={\"eid\":\"7IJ4SBWVAY6L5FOEQHCBZ57B3CYAYAA4LGJH2NGO6F6BE7PLEAJUY5WQOUI4BDGFRPH3RSGPLV5APHF4YV4DMJZ2UQ\",\"dt\":\"iPhone12,1\",\"ma\":\"\",\"im\":\"\",\"os\":\"iOS\",\"osv\":\"15.4.1\",\"ip\":\"120.244.234.209\",\"apid\":\"jdapp\",\"ia\":\"3B61EEC6-516C-4DA4-AF6C-E99F313C64D0\",\"uu\":\"\",\"cv\":\"10.0.4\",\"nt\":\"WIFI\",\"at\":\"1\"}; cid=8; shshshfp=dabca35fcbc92cb1d009acde19f60b81; shshshsID=6cd6fac4a28dea23e4e76cf97b9c6cf4_1_1651285134177; unpl=JF8EAKZnNSttWRkDURtVThUWHAgEWw1dH0dXOjMMAFVcTQQAEwZORxR7XlVdXhRKFx9sZhRUX1NIVw4YBCsiEEpcV1ZVC0kVAV9XNVddaEpkBRwAExEZQ1lWW1kMTBcEaWcAUVpeS1c1KwUbGyB7bVFeXAlOFQJobwxkXGhJVQQZBR0UFU1bZBUzCQYXBG1vBl1VXElRAR8FGxUWS1hRWVsISCcBb2cHUm1b%7CV2_ZzNtbRYAFxd9DUNcKRxYB2ILGloRUUYcIVpAAHsbWQZjVBEJclRCFnUUR11nGlgUZgIZXkFcQRRFCEJkexhdB24LFFtEUHMQfQ5GXH0pXAQJbRZeLAcCVEULRmR6KV5VNVYSCkVVRBUiAUEDKRgMBTRREV9KUUNGdlxAByhNWwVvBUIKEVBzJXwJdlR6GF0GZAoUWUdRQCUpUBkCJE0ZWTVcIlxyVnMURUooDytAGlU1Vl9fEgUWFSIPRFN7TlUCMFETDUIEERZ3AEBUKBoIAzRQRlpCX0VFIltBZHopXA%253d%253d; wxa_level=1; BATQW722QTLYVCRD={\"tk\":\"jdd014C2R445NQYRGM2X3QKQ7BOICIGKUL57ZGXLUETYHP6DPFMF3FC5FADWM5W3DOGWGEMFPMW3KGPGLDUNAB23DY5GEX3BCC4GPCJKUUJI01234567\",\"t\":1651285133703}; __jda=182444734.16504967721461800060416.1650496772.1651280279.1651285101.7; __jdb=182444734.2.16504967721461800060416|7.1651285101; __jdc=182444734; __jdv=182444734%7Cjdzt_refer_null%7Ct_232310336_1%7Cjzt-zhitou%7Cfiwrnksz5tchm01%7C1650496771000; _gia_s_local_fingerprint=e0e4fadfadac7be71f89b78901f60fe4; pre_seq=2; pre_session=3acd1f6361f86fc0a1bc23971b2e7bbe6197afb6|169; " +
+                    "pt_key=" + pt_key +
+                    "; " +
+                    "pt_pin=" + pt_pin +
+                    "; pwdt_id=jd_505bacd333f6b; sid=6ec7b9b0ff6956ee81461a9de14ae5bw; qd_fs=1651280528306; qd_ls=1651280528306; qd_sq=1; qd_ts=1651280528306; qd_uid=L2L5SI43-E24VE8SYB4FZVDYK53ZZ; qd_ad=-%7C-%7Cdirect%7C-%7C0; joyya=1651280501.0.32.0tuefmd; joyytokem=babel_23ebsEwajrvYj9qqsqhDJwZprQBoMDFuTUZPazk5MQ==.X3tzfllWfXJ2WFx0djENDRoNJF8dH3N3FV9hcGNaQnw4fRVfMy8CMRcsMSIxBBkOPTgkenQ8MQM4DiAMEA==.d806f45a; mobilev=touch; __jdu=16504967721461800060416; visitkey=36446698972455355";
+            log.info("摇京豆签到开始");
+            Map<String, String> header = new HashMap<>();
+            header.put("origin", "https://spa.jd.com");
+            header.put("referer", "https://spa.jd.com/");
+            RequestBody requestBody = new FormBody.Builder().build();
 
-        String cookie = "__jd_ref_cls=; mba_muid=16504967721461800060416.99.1651285154110; mba_sid=99.4; shshshfpa=2768c811-4a2f-1596-cf01-9d0cbd0319b9-1651280386; shshshfpb=iMZyawmZjTHrSJ72sZmuHog; 3AB9D23F7A4B3C9B=7IJ4SBWVAY6L5FOEQHCBZ57B3CYAYAA4LGJH2NGO6F6BE7PLEAJUY5WQOUI4BDGFRPH3RSGPLV5APHF4YV4DMJZ2UQ; _gia_s_e_joint={\"eid\":\"7IJ4SBWVAY6L5FOEQHCBZ57B3CYAYAA4LGJH2NGO6F6BE7PLEAJUY5WQOUI4BDGFRPH3RSGPLV5APHF4YV4DMJZ2UQ\",\"dt\":\"iPhone12,1\",\"ma\":\"\",\"im\":\"\",\"os\":\"iOS\",\"osv\":\"15.4.1\",\"ip\":\"120.244.234.209\",\"apid\":\"jdapp\",\"ia\":\"3B61EEC6-516C-4DA4-AF6C-E99F313C64D0\",\"uu\":\"\",\"cv\":\"10.0.4\",\"nt\":\"WIFI\",\"at\":\"1\"}; cid=8; shshshfp=dabca35fcbc92cb1d009acde19f60b81; shshshsID=6cd6fac4a28dea23e4e76cf97b9c6cf4_1_1651285134177; unpl=JF8EAKZnNSttWRkDURtVThUWHAgEWw1dH0dXOjMMAFVcTQQAEwZORxR7XlVdXhRKFx9sZhRUX1NIVw4YBCsiEEpcV1ZVC0kVAV9XNVddaEpkBRwAExEZQ1lWW1kMTBcEaWcAUVpeS1c1KwUbGyB7bVFeXAlOFQJobwxkXGhJVQQZBR0UFU1bZBUzCQYXBG1vBl1VXElRAR8FGxUWS1hRWVsISCcBb2cHUm1b%7CV2_ZzNtbRYAFxd9DUNcKRxYB2ILGloRUUYcIVpAAHsbWQZjVBEJclRCFnUUR11nGlgUZgIZXkFcQRRFCEJkexhdB24LFFtEUHMQfQ5GXH0pXAQJbRZeLAcCVEULRmR6KV5VNVYSCkVVRBUiAUEDKRgMBTRREV9KUUNGdlxAByhNWwVvBUIKEVBzJXwJdlR6GF0GZAoUWUdRQCUpUBkCJE0ZWTVcIlxyVnMURUooDytAGlU1Vl9fEgUWFSIPRFN7TlUCMFETDUIEERZ3AEBUKBoIAzRQRlpCX0VFIltBZHopXA%253d%253d; wxa_level=1; BATQW722QTLYVCRD={\"tk\":\"jdd014C2R445NQYRGM2X3QKQ7BOICIGKUL57ZGXLUETYHP6DPFMF3FC5FADWM5W3DOGWGEMFPMW3KGPGLDUNAB23DY5GEX3BCC4GPCJKUUJI01234567\",\"t\":1651285133703}; __jda=182444734.16504967721461800060416.1650496772.1651280279.1651285101.7; __jdb=182444734.2.16504967721461800060416|7.1651285101; __jdc=182444734; __jdv=182444734%7Cjdzt_refer_null%7Ct_232310336_1%7Cjzt-zhitou%7Cfiwrnksz5tchm01%7C1650496771000; _gia_s_local_fingerprint=e0e4fadfadac7be71f89b78901f60fe4; pre_seq=2; pre_session=3acd1f6361f86fc0a1bc23971b2e7bbe6197afb6|169; " +
-                "pt_key=" + pt_key +
-                "; " +
-                "pt_pin=" + pt_pin +
-                "; pwdt_id=jd_505bacd333f6b; sid=6ec7b9b0ff6956ee81461a9de14ae5bw; qd_fs=1651280528306; qd_ls=1651280528306; qd_sq=1; qd_ts=1651280528306; qd_uid=L2L5SI43-E24VE8SYB4FZVDYK53ZZ; qd_ad=-%7C-%7Cdirect%7C-%7C0; joyya=1651280501.0.32.0tuefmd; joyytokem=babel_23ebsEwajrvYj9qqsqhDJwZprQBoMDFuTUZPazk5MQ==.X3tzfllWfXJ2WFx0djENDRoNJF8dH3N3FV9hcGNaQnw4fRVfMy8CMRcsMSIxBBkOPTgkenQ8MQM4DiAMEA==.d806f45a; mobilev=touch; __jdu=16504967721461800060416; visitkey=36446698972455355";
-        log.info("摇京豆签到开始");
-        Map<String, String> header = new HashMap<>();
-        header.put("origin", "https://spa.jd.com");
-        header.put("referer", "https://spa.jd.com/");
-        RequestBody requestBody = new FormBody.Builder().build();
-
-        String response = OkHttpUtils.post(url, cookie, requestBody, header);
-
-
-        return response;
+            String response = OkHttpUtils.post(url, cookie, requestBody, header);
+            log.info("response:{}", response);
+            JSONObject object = JSON.parseObject(response);
+            String success = object.getString("success");
+            if (success.equals("true")) {
+                return response;
+            }
+        }
+        return null;
     }
 
     /**
