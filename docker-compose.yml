@@ -1,0 +1,10 @@
+version: '3'
+services:
+  jdou:
+    image: jdou:latest
+    container_name: jdou
+    ports:
+      - 8080:8080
+#    environment:
+#      PT_PIN: '你的pt_pin'
+#      PT_KEY: '你的pt_key'
