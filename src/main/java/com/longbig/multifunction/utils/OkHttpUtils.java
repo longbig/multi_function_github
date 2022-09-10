@@ -1,4 +1,4 @@
-package com.longbig.multifunction.job;
+package com.longbig.multifunction.utils;
 
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;

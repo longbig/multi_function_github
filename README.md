@@ -5,7 +5,7 @@
 
 ## 自动签到脚本使用
 ### Java运行方式
-- 京东脚本：修改application.properties文件里jd.pt_key和jd.pt_pin为你的Cookie里的pt_key和pt_pin
+- 京东脚本：多个cookie时,修改resources目录下的jd_cookie.txt文件,每行为pt_key,pt_pin的格式
 - 掘金脚本：修改application.properties文件的juejin.Cookie为你的掘金cookie
 
 - 运行MultiFunctionApplication类下的main函数启动项目
@@ -19,12 +19,13 @@
 
 
 ### Docker运行方式
-- 替换application.properties文件或docker-compose.yml文件下的pt_pin和pt_key
+- 替换jd_cookie.txt文件或docker-compose.yml文件下的pt_pin和pt_key
 - 运行`maven package`将代码构建为jar文件
-- 运行`docker build -t jdou`将jar包构建为docker镜像，名称为jdou
+- 运行`docker build -t jdou:v1.1 ./`将jar包构建为docker镜像，名称为jdou:v1.1,放在当前路径下
 - 运行`docker-compose up`运行上一步构建的镜像即可
 
 ## 更新
+- 2022.09.10 修改京东任务,支持多个账号的签到
 - 2022.09.04 增加掘金自动签到任务和抽奖任务
 - 2022.05.15 增加Dockerfile、docker-compose文件，用于docker构建镜像和运行镜像
 - 2022.05.01 新增自动签到定时任务：摇京豆签到、抽京豆任务、plus会员签到。接口文档可视化界面

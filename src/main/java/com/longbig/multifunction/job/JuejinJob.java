@@ -1,6 +1,7 @@
 package com.longbig.multifunction.job;
 
 import com.google.common.collect.Maps;
+import com.longbig.multifunction.utils.OkHttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.FormBody;
 import okhttp3.RequestBody;
@@ -32,6 +33,7 @@ public class JuejinJob {
         log.info("掘金自动签到开始");
         Map<String, String> header = Maps.newHashMap();
         String url = "https://api.juejin.cn/growth_api/v1/check_in";
+        String juejinCookie = "你的cookie";
         RequestBody requestBody = new FormBody.Builder().build();
         String response = OkHttpUtils.post(url, juejinCookie, requestBody, header);
 
@@ -48,6 +50,7 @@ public class JuejinJob {
         log.info("掘金自动抽奖开始");
         Map<String, String> header = Maps.newHashMap();
         String drawUrl = "https://api.juejin.cn/growth_api/v1/lottery/draw";
+        String juejinCookie = "你的cookie";
         RequestBody requestBody = new FormBody.Builder().build();
         String response = OkHttpUtils.post(drawUrl, juejinCookie, requestBody, header);
         return response;
