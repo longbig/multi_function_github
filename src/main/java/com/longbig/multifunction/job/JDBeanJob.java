@@ -41,7 +41,7 @@ public class JDBeanJob {
     private String filePath;
 
     @Value("${start.docker}")
-    private Boolean fromDocker;
+    private Integer fromDocker;
 
     private List<String> cookies;
 
@@ -50,9 +50,12 @@ public class JDBeanJob {
         log.info("加载cookie到全局变量");
         cookies = Lists.newArrayList();
         List<String> ptAlls = Lists.newArrayList();
-        if (fromDocker) {
+        Boolean isFromDocker = fromDocker == 1 ? true : false;
+        if (isFromDocker) {
+            log.info("start from java");
             ptAlls = FileUtils.readFileToStringList(filePath);
         } else {
+            log.info("start from docker");
             ptAlls = resourceUtils.readFromClassPath(filePath);
         }
         for (String ptAll : ptAlls) {

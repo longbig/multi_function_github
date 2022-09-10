@@ -6,7 +6,7 @@ services:
     ports:
       - 8080:8080
     environment:
-      START_FROM_DOCKER: true
+      START_FROM_DOCKER: 1
       FILE_PATH: /Users/yuyunlong/opt/jd_cookie.txt
 #      PT_PIN: '你的pt_pin'
 #      PT_KEY: '你的pt_key'
