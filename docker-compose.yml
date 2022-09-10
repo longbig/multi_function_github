@@ -7,6 +7,9 @@ services:
       - 8080:8080
     environment:
       START_FROM_DOCKER: 1
-      FILE_PATH: /Users/yuyunlong/opt/jd_cookie.txt
+      FILE_PATH: /opt/jd_cookie.txt
+    volumes:
+    - /Users/longbig/opt:/opt #替换格式说明，宿主机文件目录:docker内路径 映射关系
+
 #      PT_PIN: '你的pt_pin'
 #      PT_KEY: '你的pt_key'

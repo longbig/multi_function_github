@@ -19,8 +19,8 @@
 
 
 ### Docker打包方式
-- 在自己电脑或者服务器上建个txt文件,放多个账号的cookie值，格式为pt_key,pt_pin
-- 修改docker-compose.yml文件下的FILE_PATH变量值为上一步txt文件的绝对路径
+- 在自己电脑或者服务器上建个jd_cookie.txt文件,里面放多个账号的cookie值，格式为pt_key,pt_pin
+- 修改docker-compose.yml文件下的volumes变量值,替换为上一步txt文件的绝对路径,Mac电脑示例：/home/admin/opt:/opt
 - 运行`maven package`将代码构建为jar文件
 - 运行`docker build -t jdou:v1.1 ./`将jar包构建为docker镜像，名称为jdou:v1.1,放在当前路径下
 - 运行`docker-compose up`运行上一步构建的镜像即可

@@ -52,10 +52,10 @@ public class JDBeanJob {
         List<String> ptAlls = Lists.newArrayList();
         Boolean isFromDocker = fromDocker == 1 ? true : false;
         if (isFromDocker) {
-            log.info("start from java");
+            log.info("start from docker，filePath:{}", filePath);
             ptAlls = FileUtils.readFileToStringList(filePath);
         } else {
-            log.info("start from docker");
+            log.info("start from java, filePath:{}", filePath);
             ptAlls = resourceUtils.readFromClassPath(filePath);
         }
         for (String ptAll : ptAlls) {
