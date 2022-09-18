@@ -4,6 +4,8 @@
 - 羊了个羊无限通关，通关教程在公众号**卷福同学** 最新文章里，所用工具包在公众号里发送`羊了个羊`获取
 - 有脚本运行问题可公众号内询问
 
+![公众号二维码](https://raw.githubusercontent.com/longbig/multi_function_github/main/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7.png)
+
 ## 脚本使用
 ### Java运行方式
 - 羊了个羊：代码在YangService下，启动程序后，浏览器访问`http://localhost:8080/doc.html#/default/yang-service/getYangUsingGET`,
