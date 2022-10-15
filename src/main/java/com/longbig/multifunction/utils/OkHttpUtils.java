@@ -61,4 +61,26 @@ public class OkHttpUtils {
         return result;
     }
 
+    public static String get(String url) throws Exception {
+
+        String userAgent = "okhttp/3.12.1;jdmall;android;version/10.3.4;build/92451;";
+
+        OkHttpClient client = new OkHttpClient().newBuilder()
+                .build();
+        Request request = new Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("User-Agent", userAgent)
+                .addHeader("Content-Type", "application/json; charset=UTF-8")
+                .addHeader("Cache-Control", "no-cache")
+                .addHeader("connection", "Keep-Alive")
+                .addHeader("accept", "*/*")
+                .build();
+
+        Response response = client.newCall(request).execute();
+        String result = response.body().string();
+        log.info("get请求,result:{}", result);
+        return result;
+    }
+
 }
