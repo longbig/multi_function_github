@@ -1,12 +1,17 @@
 # multi_function_github
 运行环境：Java8，maven
 
+- ChatGPT接入企业微信成为聊天机器人
 - 羊了个羊无限通关，通关教程在公众号**卷福同学** 最新文章里，所用工具包在公众号里发送`羊了个羊`获取
 - 有脚本运行问题可公众号内询问
 
 ![公众号二维码](https://raw.githubusercontent.com/longbig/multi_function_github/main/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7.png)
 
 ## 脚本使用
+### ChatGPT接入企业微信
+- 修改application.properties文件的chatgpt开头 和wechat开头的配置
+- 使用方法：
+
 ### Java运行方式
 - 羊了个羊：代码在YangService下，启动程序后，浏览器访问`http://localhost:8080/doc.html#/default/yang-service/getYangUsingGET`,
   在参数cookie里写入t=【替换为抓包工具抓到的t值】，直接请求即可，抓包教程见公众号最新文章
@@ -31,6 +36,7 @@
 - 运行`docker-compose up`运行上一步构建的镜像即可
 
 ## 更新
+- 2023.02.18 增加ChatGPT接入企业微信，成为聊天机器人代码
 - 2022.10.15 增加短信轰炸示例代码
 - 2022.09.18 增加`羊了个羊`微信小程序通关调用
 - 2022.09.10 修改任务脚本,支持多个账号的签到
