@@ -10,7 +10,7 @@
 ## 脚本使用
 ### ChatGPT接入企业微信
 - 修改application.properties文件的chatgpt开头 和wechat开头的配置
-- 使用方法：
+- 使用方法：[ChatGPT接入企业微信成为聊天机器人教程](https://longbig.github.io/2023/02/19/ChatGPT%E6%8E%A5%E5%85%A5%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%90%E4%B8%BA%E8%81%8A%E5%A4%A9%E6%9C%BA%E5%99%A8%E4%BA%BA/)
 
 ### Java运行方式
 - 羊了个羊：代码在YangService下，启动程序后，浏览器访问`http://localhost:8080/doc.html#/default/yang-service/getYangUsingGET`,
