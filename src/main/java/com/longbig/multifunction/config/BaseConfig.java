@@ -23,6 +23,9 @@ public class BaseConfig {
     @Value("${wechat.corpsecret}")
     private String corpsecret;
 
+    @Value("${wechat.agentId}")
+    private String agentId;
+
     @Value("${chatgpt.apiKey}")
     private String chatGptApiKey;
 
