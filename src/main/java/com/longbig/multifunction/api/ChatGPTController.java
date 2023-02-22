@@ -39,6 +39,8 @@ public class ChatGPTController {
                                    @RequestParam("timestamp") String timestamp,
                                    @RequestParam("nonce") String nonce,
                                    @RequestParam("echostr") String echostr) throws Exception {
+        log.info("receiveMsgFromDd, msg_signature:{}, timestamp:{}, nonce:{}, echostr:{}",
+                msg_signature, timestamp, nonce, echostr);
         WXBizMsgCrypt wxcpt = new WXBizMsgCrypt(baseConfig.getSToken(), baseConfig.getSEncodingAESKey(),
                 baseConfig.getSCorpID());
 
