@@ -10,6 +10,7 @@
 ## 脚本使用
 ### ChatGPT接入企业微信
 - 修改application.properties文件的chatgpt开头 和wechat开头的配置
+- 默认访问超时时间是30s，如需修改，可自行修改`OkHttpUtils`中`DEFAULT_TIME_OUT`的值
 - 使用方法：[ChatGPT接入企业微信成为聊天机器人教程](https://longbig.github.io/2023/02/19/ChatGPT%E6%8E%A5%E5%85%A5%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%90%E4%B8%BA%E8%81%8A%E5%A4%A9%E6%9C%BA%E5%99%A8%E4%BA%BA/)
 
 ### Java运行方式
@@ -36,6 +37,7 @@
 - 运行`docker-compose up`运行上一步构建的镜像即可
 
 ## 更新
+- 2023.02.27 修复ChatGPT接入企业微信未设置超时时间的bug
 - 2023.02.22 修复ChatGPT接入企业微信agentId的bug
 - 2023.02.18 增加ChatGPT接入企业微信，成为聊天机器人代码
 - 2022.10.15 增加短信轰炸示例代码

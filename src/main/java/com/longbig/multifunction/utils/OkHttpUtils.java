@@ -1,9 +1,12 @@
 package com.longbig.multifunction.utils;
 
+import com.longbig.multifunction.config.BaseConfig;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author yuyunlong
@@ -13,11 +16,15 @@ import java.util.Map;
 @Slf4j
 public class OkHttpUtils {
 
+    private static Long DEFAULT_TIME_OUT = 30L;
+
     public static String post(String url, String cookie, RequestBody requestBody, Map<String, String> header) throws Exception {
 
         String userAgent = "okhttp/3.12.1;jdmall;android;version/10.3.4;build/92451;";
 
         OkHttpClient client = new OkHttpClient().newBuilder()
+                .connectTimeout(DEFAULT_TIME_OUT, TimeUnit.SECONDS)
+                .readTimeout(DEFAULT_TIME_OUT, TimeUnit.SECONDS)
                 .build();
         Request request = new Request.Builder()
                 .url(url)
