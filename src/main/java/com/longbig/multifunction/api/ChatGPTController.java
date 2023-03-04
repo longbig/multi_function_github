@@ -81,7 +81,7 @@ public class ChatGPTController {
                 public void run() {
                     String fromUser = StringUtils.substringBetween(xmlcontent, "<FromUserName><![CDATA[", "]]></FromUserName>");
                     // 调openai
-                    String result = chatGptService.openAiComplete(data);
+                    String result = chatGptService.gptNewComplete(data);
                     //给微信发消息
                     String send = weChatService.sendMsg(result, fromUser);
                 }
