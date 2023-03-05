@@ -29,4 +29,7 @@ public class BaseConfig {
     @Value("${chatgpt.apiKey}")
     private String chatGptApiKey;
 
+    @Value("${chatgpt.flow.num}")
+    private Integer chatGptFlowNum;
+
 }
