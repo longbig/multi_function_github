@@ -108,9 +108,9 @@ public class ChatGptService {
         String result = (String) jsonObject2.get("content");
         log.info("gptNewComplete result:{}", result);
 
-        if (msgs.size() > 6) {
+        if (msgs.size() > baseConfig.getChatGptFlowNum()) {
             CacheHelper.setUserChatFlowClose(fromUser);
-            return "连续对话超过6次，自动关闭";
+            return "连续对话超过" + baseConfig.getChatGptFlowNum() + "次，自动关闭";
         } else if (CacheHelper.getUserChatFlowSwitch(fromUser)) {
             List<GptMessageDto> asistantMsgs = CacheHelper.getGptCache(fromUser);
             GptMessageDto asistantMsg = new GptMessageDto();
