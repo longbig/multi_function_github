@@ -11,7 +11,7 @@
 ### ChatGPT 3.5接入企业微信
 - 修改application.properties文件的chatgpt开头 和wechat开头的配置，配置内容看注释
 - 默认访问超时时间是30s，如需修改，可自行修改`OkHttpUtils`中`DEFAULT_TIME_OUT`的值
-- 使用教程：[ChatGPT接入企业微信成为聊天机器人教程](https://longbig.github.io/2023/02/19/ChatGPT%E6%8E%A5%E5%85%A5%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E6%88%90%E4%B8%BA%E8%81%8A%E5%A4%A9%E6%9C%BA%E5%99%A8%E4%BA%BA/)
+- 使用教程：[ChatGPT3.5接入企业微信且支持连续对话](https://longbig.github.io/2023/03/05/ChatGPT3-5%E6%8E%A5%E5%85%A5%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E4%B8%94%E6%94%AF%E6%8C%81%E8%BF%9E%E7%BB%AD%E5%AF%B9%E8%AF%9D/)
 - 发送`开始连续对话`进入连续对话模式，注意连续对话模式下，chatGPT账号额度消耗是累加（每次发消息，会累加这次和过去所有对话的额度消耗）
 - 发送`结束连续对话`关闭连续对话模式
 - 可修改application.properties文件里的`chatgpt.flow.num`配置，自行修改最大对话次数（不建议太大，官方限制的消息最大长度是4096 token，大概10次对话之后就会超了）
