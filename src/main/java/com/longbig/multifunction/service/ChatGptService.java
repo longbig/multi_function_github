@@ -7,6 +7,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.longbig.multifunction.config.BaseConfig;
 import com.longbig.multifunction.model.chatgpt.GptMessageDto;
+import com.longbig.multifunction.utils.CacheHelper;
 import com.longbig.multifunction.utils.OkHttpUtils;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.MediaType;
@@ -68,7 +69,7 @@ public class ChatGptService {
      *
      * @return
      */
-    public String gptNewComplete(String text) {
+    public String gptNewComplete(String text, String fromUser) {
         log.info("调用GPT3.5模型对话,text:{}", text);
         Map<String, String> header = Maps.newHashMap();
         String drawUrl = "https://api.openai.com/v1/chat/completions";
@@ -76,6 +77,9 @@ public class ChatGptService {
         header.put("Authorization", "Bearer " + baseConfig.getChatGptApiKey());
         Map<String, Object> body = Maps.newHashMap();
         List<GptMessageDto> msgs = Lists.newArrayList();
+        if (CacheHelper.getUserChatFlowSwitch(fromUser)) {
+            msgs = CacheHelper.getGptCache(fromUser);
+        }
         GptMessageDto gptMessageDto = new GptMessageDto();
         gptMessageDto.setRole("user");
         gptMessageDto.setContent(text);
@@ -103,6 +107,13 @@ public class ChatGptService {
         JSONObject jsonObject2 = (JSONObject) jsonObject1.get("message");
         String result = (String) jsonObject2.get("content");
         log.info("gptNewComplete result:{}", result);
+
+        if (msgs.size() > 10) {
+            CacheHelper.setUserChatFlowClose(fromUser);
+            return "连续对话超过10次，自动关闭";
+        } else if (CacheHelper.getUserChatFlowSwitch(fromUser)) {
+            CacheHelper.setGptCache(fromUser, msgs);
+        }
         return result;
     }
 

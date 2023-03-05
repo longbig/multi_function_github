@@ -1,10 +1,12 @@
 package com.longbig.multifunction.api;
 
 import com.longbig.multifunction.config.BaseConfig;
+import com.longbig.multifunction.config.BaseConstant;
 import com.longbig.multifunction.dto.WechatXmlDTO;
 import com.longbig.multifunction.model.wechat.aes.WXBizMsgCrypt;
 import com.longbig.multifunction.service.ChatGptService;
 import com.longbig.multifunction.service.WeChatService;
+import com.longbig.multifunction.utils.CacheHelper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -80,8 +82,13 @@ public class ChatGPTController {
                 @Override
                 public void run() {
                     String fromUser = StringUtils.substringBetween(xmlcontent, "<FromUserName><![CDATA[", "]]></FromUserName>");
+                    //是否开启连续对话
+                    if (BaseConstant.CHAT_FLOW_OPEN.equals(data) || BaseConstant.CHAT_FLOW_CLOSE.equals(data)) {
+                        ChatFlowhandler(data, fromUser);
+                        return;
+                    }
                     // 调openai
-                    String result = chatGptService.gptNewComplete(data);
+                    String result = chatGptService.gptNewComplete(data, fromUser);
                     //给微信发消息
                     String send = weChatService.sendMsg(result, fromUser);
                 }
@@ -92,5 +99,23 @@ public class ChatGPTController {
             log.error("DecryptMsg msg error,e={}", e);
             return "";
         }
+    }
+
+    private void ChatFlowhandler(String data, String fromUser) {
+        String result = "";
+        if (BaseConstant.CHAT_FLOW_OPEN.equals(data)) {
+            CacheHelper.setUserChatFlowOpen(fromUser);
+            result = "连续对话开启，有效期10分钟，连续对话超过10次后自动关闭";
+        } else if (BaseConstant.CHAT_FLOW_CLOSE.equals(data)) {
+            CacheHelper.setUserChatFlowClose(fromUser);
+            result = "连续对话关闭";
+        }
+
+        try {
+            String send = weChatService.sendMsg(result, fromUser);
+        } catch (Exception e) {
+            log.error("weChatService.sendMsg error,e={}", e);
+        }
+
     }
 }
