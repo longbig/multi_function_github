@@ -2,7 +2,9 @@ package com.longbig.multifunction.utils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
 import com.longbig.multifunction.model.chatgpt.GptMessageDto;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -49,7 +51,11 @@ public class CacheHelper {
     }
 
     public static List<GptMessageDto> getGptCache(String username) {
-        return chatGptCache.getIfPresent(username);
+        List<GptMessageDto> messageDtos = chatGptCache.getIfPresent(username);
+        if (CollectionUtils.isEmpty(messageDtos)) {
+            return Lists.newArrayList();
+        }
+        return messageDtos;
     }
 
     public static void setUserChatFlowOpen(String username) {
