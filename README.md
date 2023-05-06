@@ -8,12 +8,14 @@
 ![公众号二维码](https://raw.githubusercontent.com/longbig/multi_function_github/main/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7.png)
 
 ## 脚本使用
-### ChatGPT 3.5接入企业微信
+### ChatGPT 3.5 / 4接入企业微信
 - 修改application.properties文件的chatgpt开头 和wechat开头的配置，配置内容看注释
 - 默认访问超时时间是30s，如需修改，可自行修改`OkHttpUtils`中`DEFAULT_TIME_OUT`的值
 - 使用教程：[ChatGPT3.5接入企业微信且支持连续对话](https://longbig.github.io/2023/03/05/ChatGPT3-5%E6%8E%A5%E5%85%A5%E4%BC%81%E4%B8%9A%E5%BE%AE%E4%BF%A1%E4%B8%94%E6%94%AF%E6%8C%81%E8%BF%9E%E7%BB%AD%E5%AF%B9%E8%AF%9D/)
 - 发送`开始连续对话`进入连续对话模式，注意连续对话模式下，chatGPT账号额度消耗是累加（每次发消息，会累加这次和过去所有对话的额度消耗）
 - 发送`结束连续对话`关闭连续对话模式
+- 发送`开始GPT4`使用GPT4模型，发送`结束GPT4`关闭GPT4模型
+  
 - 可修改application.properties文件里的`chatgpt.flow.num`配置，自行修改最大对话次数（不建议太大，官方限制的消息最大长度是4096 token，大概20次对话之后就会超了）
 
 ### 其他脚本使用
@@ -40,6 +42,7 @@
 - 运行`docker-compose up`运行上一步构建的镜像即可
 
 ## 更新
+- 2023.05.06 更新，加上GPT4模型对话，修复ChatGPT消息长度过长，被微信截断的bug
 - 2023.03.05 更新，使用GPT3.5接入企业微信，且新增连续对话功能
 - 2023.02.27 修复ChatGPT接入企业微信未设置超时时间的bug
 - 2023.02.22 修复ChatGPT接入企业微信agentId的bug

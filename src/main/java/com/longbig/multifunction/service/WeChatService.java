@@ -1,6 +1,7 @@
 package com.longbig.multifunction.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.longbig.multifunction.config.BaseConfig;
 import com.longbig.multifunction.utils.CacheHelper;
@@ -11,6 +12,8 @@ import okhttp3.RequestBody;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author yuyunlong
@@ -47,6 +50,7 @@ public class WeChatService {
 
     public String sendMsg(String msg, String touser) throws Exception {
         String accessToken = null;
+        List<String> msgList = Lists.newArrayList();
         try {
             accessToken = getAccessToken();
         } catch (Exception e) {
@@ -54,22 +58,38 @@ public class WeChatService {
             return "fail";
         }
         String url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=" + accessToken;
-        String body = "{\n" +
-                "   \"touser\" : \"" + touser + "\",\n" +
-                "   \"msgtype\" : \"text\",\n" +
-                "   \"agentid\" : " + baseConfig.getAgentId() + ",\n" +
-                "   \"text\" : {\n" +
-                "       \"content\" : \"" + msg + "\"\n" +
-                "   },\n" +
-                "   \"safe\":0,\n" +
-                "   \"enable_id_trans\": 0,\n" +
-                "   \"enable_duplicate_check\": 0,\n" +
-                "   \"duplicate_check_interval\": 1800\n" +
-                "}";
-        MediaType JSON1 = MediaType.parse("application/json;charset=utf-8");
-        RequestBody requestBody = RequestBody.create(JSON1, body);
-        log.info("send msg:{}", requestBody);
-        OkHttpUtils.post(url, "", requestBody, Maps.newHashMap());
+        if (msg.length() > 2048) {
+            int count = msg.length() / 2048 + 1;
+            int beginIndex = 0, endIndex = 2048;
+            for (int i = 0; i < count; i++) {
+                String temp = msg.substring(beginIndex, endIndex);
+                msgList.add(temp);
+                beginIndex = endIndex;
+                endIndex += 2048;
+                endIndex = endIndex > msg.length() ? msg.length() : endIndex;
+            }
+        } else {
+            msgList.add(msg);
+        }
+
+        for (String s : msgList) {
+            String body = "{\n" +
+                    "   \"touser\" : \"" + touser + "\",\n" +
+                    "   \"msgtype\" : \"text\",\n" +
+                    "   \"agentid\" : " + baseConfig.getAgentId() + ",\n" +
+                    "   \"text\" : {\n" +
+                    "       \"content\" : \"" + s + "\"\n" +
+                    "   },\n" +
+                    "   \"safe\":0,\n" +
+                    "   \"enable_id_trans\": 0,\n" +
+                    "   \"enable_duplicate_check\": 0,\n" +
+                    "   \"duplicate_check_interval\": 1800\n" +
+                    "}";
+            MediaType JSON1 = MediaType.parse("application/json;charset=utf-8");
+            RequestBody requestBody = RequestBody.create(JSON1, body);
+            log.info("send msg:{}", requestBody);
+            OkHttpUtils.post(url, "", requestBody, Maps.newHashMap());
+        }
         return "success;";
     }
 

@@ -11,4 +11,9 @@ public class BaseConstant {
 
     public static final String CHAT_FLOW_CLOSE = "结束连续对话";
 
+    public static final String CHAT_GPT_4_OPEN = "开始GPT4";
+
+    public static final String CHAT_GPT_4_CLOSE = "结束GPT4";
+
+
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author yuyunlong
@@ -70,7 +71,6 @@ public class ChatGptService {
      * @return
      */
     public String gptNewComplete(String text, String fromUser) {
-        log.info("调用GPT3.5模型对话,text:{}", text);
         Map<String, String> header = Maps.newHashMap();
         String drawUrl = "https://api.openai.com/v1/chat/completions";
         String cookie = "";
@@ -84,9 +84,14 @@ public class ChatGptService {
         gptMessageDto.setRole("user");
         gptMessageDto.setContent(text);
         msgs.add(gptMessageDto);
-        body.put("model", "gpt-3.5-turbo");
+        if (CacheHelper.getUserChatGpt4Switch(fromUser)) {
+            body.put("model", "gpt-4");
+            log.info("调用GPT4模型对话,text:{}", text);
+        } else {
+            body.put("model", "gpt-3.5-turbo");
+            log.info("调用GPT3.5模型对话,text:{}", text);
+        }
         body.put("messages", msgs);
-        body.put("max_tokens", 1024);
         body.put("temperature", 1);
         MediaType JSON1 = MediaType.parse("application/json;charset=utf-8");
         RequestBody requestBody = RequestBody.create(JSON1, JSON.toJSONString(body));
@@ -102,6 +107,10 @@ public class ChatGptService {
             return "访问超时";
         }
         JSONObject jsonObject = JSONObject.parseObject(response);
+        String errorMsg = (String) jsonObject.get("error");
+        if (StringUtils.isNotEmpty(errorMsg)) {
+            return errorMsg;
+        }
         JSONArray jsonArray = jsonObject.getJSONArray("choices");
         JSONObject jsonObject1 = (JSONObject) jsonArray.get(0);
         JSONObject jsonObject2 = (JSONObject) jsonObject1.get("message");

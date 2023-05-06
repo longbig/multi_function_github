@@ -23,6 +23,8 @@ public class CacheHelper {
 
     //用户连续对话开关
     private static Cache<String, Boolean> userChatFlowSwitch;
+    //用户GPT4对话开关
+    private static Cache<String, Boolean> userChatGpt4Switch;
 
     static {
         cache = CacheBuilder.newBuilder()
@@ -30,11 +32,11 @@ public class CacheHelper {
                 .build();
 
         chatGptCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(10, TimeUnit.MINUTES)
+                .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build();
 
         userChatFlowSwitch = CacheBuilder.newBuilder()
-                .expireAfterWrite(15, TimeUnit.MINUTES)
+                .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build();
     }
 
@@ -69,6 +71,22 @@ public class CacheHelper {
 
     public static Boolean getUserChatFlowSwitch(String username) {
         Boolean result = userChatFlowSwitch.getIfPresent(username);
+        if (Objects.isNull(result)) {
+            return false;
+        }
+        return result;
+    }
+
+    public static void setUserChatGpt4Open(String username) {
+        userChatGpt4Switch.put(username, true);
+    }
+
+    public static void setUserChatGpt4Close(String username) {
+        userChatGpt4Switch.put(username, false);
+    }
+
+    public static Boolean getUserChatGpt4Switch(String username) {
+        Boolean result = userChatGpt4Switch.getIfPresent(username);
         if (Objects.isNull(result)) {
             return false;
         }

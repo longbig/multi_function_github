@@ -105,10 +105,16 @@ public class ChatGPTController {
         String result = "";
         if (BaseConstant.CHAT_FLOW_OPEN.equals(data)) {
             CacheHelper.setUserChatFlowOpen(fromUser);
-            result = "连续对话开启，有效期10分钟，连续对话超过" + baseConfig.getChatGptFlowNum() + "次后自动关闭";
+            result = "连续对话开启，有效期30分钟，连续对话超过" + baseConfig.getChatGptFlowNum() + "次后自动关闭";
         } else if (BaseConstant.CHAT_FLOW_CLOSE.equals(data)) {
             CacheHelper.setUserChatFlowClose(fromUser);
             result = "连续对话关闭";
+        } else if (BaseConstant.CHAT_GPT_4_OPEN.equals(data)) {
+            CacheHelper.setUserChatGpt4Open(fromUser);
+            result = "GPT4对话开启";
+        } else if (BaseConstant.CHAT_GPT_4_CLOSE.equals(data)) {
+            CacheHelper.setUserChatGpt4Close(fromUser);
+            result = "GPT4对话关闭";
         }
 
         try {
