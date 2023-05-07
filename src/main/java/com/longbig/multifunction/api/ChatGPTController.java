@@ -82,8 +82,8 @@ public class ChatGPTController {
                 @Override
                 public void run() {
                     String fromUser = StringUtils.substringBetween(xmlcontent, "<FromUserName><![CDATA[", "]]></FromUserName>");
-                    //是否开启连续对话
-                    if (BaseConstant.CHAT_FLOW_OPEN.equals(data) || BaseConstant.CHAT_FLOW_CLOSE.equals(data)) {
+                    //是否开启连续对话,GPT4
+                    if (BaseConstant.isInChatArray(data)) {
                         ChatFlowhandler(data, fromUser);
                         return;
                     }
@@ -111,7 +111,7 @@ public class ChatGPTController {
             result = "连续对话关闭";
         } else if (BaseConstant.CHAT_GPT_4_OPEN.equals(data)) {
             CacheHelper.setUserChatGpt4Open(fromUser);
-            result = "GPT4对话开启";
+            result = "GPT4对话开启，有效期3小时";
         } else if (BaseConstant.CHAT_GPT_4_CLOSE.equals(data)) {
             CacheHelper.setUserChatGpt4Close(fromUser);
             result = "GPT4对话关闭";

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class OkHttpUtils {
 
-    private static Long DEFAULT_TIME_OUT = 30L;
+    private static Long DEFAULT_TIME_OUT = 40L;
 
     public static String post(String url, String cookie, RequestBody requestBody, Map<String, String> header) throws Exception {
 

@@ -33,7 +33,7 @@ public class WeChatService {
 
         String data = CacheHelper.get(WECHAT_TOKEN);
         if (StringUtils.isNotEmpty(data)) {
-            log.info("cache data:{}", data);
+//            log.info("cache data:{}", data);
             return data;
         }
         String corpid = baseConfig.getSCorpID();

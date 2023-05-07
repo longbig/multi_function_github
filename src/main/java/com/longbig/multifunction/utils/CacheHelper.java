@@ -38,6 +38,10 @@ public class CacheHelper {
         userChatFlowSwitch = CacheBuilder.newBuilder()
                 .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build();
+
+        userChatGpt4Switch = CacheBuilder.newBuilder()
+                .expireAfterWrite(3, TimeUnit.HOURS)
+                .build();
     }
 
     public static void set(String key, String value) {
