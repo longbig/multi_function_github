@@ -107,8 +107,9 @@ public class ChatGptService {
             return "访问超时";
         }
         JSONObject jsonObject = JSONObject.parseObject(response);
-        String errorMsg = (String) jsonObject.get("error");
-        if (StringUtils.isNotEmpty(errorMsg)) {
+        JSONObject errorJsonObject = (JSONObject) jsonObject.get("error");
+        if (Objects.nonNull(errorJsonObject)) {
+            String errorMsg = (String) errorJsonObject.get("message");
             return errorMsg;
         }
         JSONArray jsonArray = jsonObject.getJSONArray("choices");
