@@ -26,6 +26,8 @@ public class CacheHelper {
     //用户GPT4对话开关
     private static Cache<String, Boolean> userChatGpt4Switch;
 
+    private static Cache<String, String> wechatCache;
+
     static {
         cache = CacheBuilder.newBuilder()
                 .expireAfterWrite(120, TimeUnit.MINUTES)
@@ -42,6 +44,18 @@ public class CacheHelper {
         userChatGpt4Switch = CacheBuilder.newBuilder()
                 .expireAfterWrite(3, TimeUnit.HOURS)
                 .build();
+
+        wechatCache = CacheBuilder.newBuilder()
+                .expireAfterWrite(3, TimeUnit.DAYS)
+                .build();
+    }
+
+    public static void setWechatCache(String key, String value) {
+        wechatCache.put(key, value);
+    }
+
+    public static String getWechatCache(String key) {
+        return wechatCache.getIfPresent(key);
     }
 
     public static void set(String key, String value) {

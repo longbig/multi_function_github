@@ -3,16 +3,21 @@ package com.longbig.multifunction.api;
 import com.longbig.multifunction.config.BaseConfig;
 import com.longbig.multifunction.config.BaseConstant;
 import com.longbig.multifunction.dto.WechatXmlDTO;
+import com.longbig.multifunction.model.wechat.aes.AesException;
 import com.longbig.multifunction.model.wechat.aes.WXBizMsgCrypt;
+import com.longbig.multifunction.model.wechat.kf.*;
 import com.longbig.multifunction.service.ChatGptService;
 import com.longbig.multifunction.service.WeChatService;
 import com.longbig.multifunction.utils.CacheHelper;
+import com.longbig.multifunction.utils.XmlHelper;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -36,6 +41,15 @@ public class ChatGPTController {
 
     private Executor executor = Executors.newCachedThreadPool();
 
+    /**
+     * 企业微信三方应用验证消息接口
+     * @param msg_signature
+     * @param timestamp
+     * @param nonce
+     * @param echostr
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/receiveMsgFromWechat")
     public String receiveMsgFromDd(@RequestParam("msg_signature") String msg_signature,
                                    @RequestParam("timestamp") String timestamp,
@@ -43,24 +57,19 @@ public class ChatGPTController {
                                    @RequestParam("echostr") String echostr) throws Exception {
         log.info("receiveMsgFromDd, msg_signature:{}, timestamp:{}, nonce:{}, echostr:{}",
                 msg_signature, timestamp, nonce, echostr);
-        WXBizMsgCrypt wxcpt = new WXBizMsgCrypt(baseConfig.getSToken(), baseConfig.getSEncodingAESKey(),
-                baseConfig.getSCorpID());
-
-        String sEchoStr = null;
-        try {
-            sEchoStr = wxcpt.VerifyURL(msg_signature, timestamp,
-                    nonce, echostr);
-            log.info("verifyurl echostr: " + sEchoStr);
-            // 验证URL成功，将sEchoStr返回
-            return sEchoStr;
-        } catch (Exception e) {
-            //验证URL失败，错误原因请查看异常
-            log.error("verifyurl error,e={}", e);
-            return "";
-        }
+        return validateMessage(msg_signature, timestamp, nonce, echostr);
     }
 
 
+    /**
+     * 企业微信三方应用接收消息接口
+     * @param msg_signature
+     * @param timestamp
+     * @param nonce
+     * @param body
+     * @return
+     * @throws Exception
+     */
     @PostMapping(value = "/receiveMsgFromWechat",
             consumes = {"application/xml", "text/xml"},
             produces = "application/xml;charset=utf-8")
@@ -101,6 +110,82 @@ public class ChatGPTController {
         }
     }
 
+
+    /**
+     * 微信客服API验证消息接口
+     * @param msg_signature
+     * @param timestamp
+     * @param nonce
+     * @param echostr
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("/receiveMsgFromWechatKf")
+    public String receiveMsgFromWechatKf(@RequestParam("msg_signature") String msg_signature,
+                                         @RequestParam("timestamp") String timestamp,
+                                         @RequestParam("nonce") String nonce,
+                                         @RequestParam("echostr") String echostr) throws Exception {
+        log.info("receiveMsgFromWechatKf, msg_signature:{}, timestamp:{}, nonce:{}, echostr:{}",
+                msg_signature, timestamp, nonce, echostr);
+        return validateMessage(msg_signature, timestamp, nonce, echostr);
+    }
+
+
+    /**
+     * 微信客服API接收消息接口
+     * @param msg_signature
+     * @param timestamp
+     * @param nonce
+     * @param body
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/receiveMsgFromWechatKf",
+            consumes = {"application/xml", "text/xml"},
+            produces = "application/xml;charset=utf-8")
+    public String receiveMsgFromWechatKf(@RequestParam("msg_signature") String msg_signature,
+                                         @RequestParam("timestamp") String timestamp,
+                                         @RequestParam("nonce") String nonce,
+                                         @RequestBody WechatXmlDTO body) throws Exception {
+        WXBizMsgCrypt wxcpt = new WXBizMsgCrypt(baseConfig.getSToken(), baseConfig.getSEncodingAESKey(),
+                baseConfig.getSCorpID());
+
+        String sEchoStr = null;
+        try {
+            String msg = body.getEncrypt();
+            String xmlcontent = wxcpt.decrypt(msg);
+            log.info("xml content msg: " + xmlcontent);
+            KefuNoticeDTO kefuNoticeDTO = XmlHelper.parseXmlToObject(xmlcontent, KefuNoticeDTO.class);
+            log.info("kefuDataDTO:{}", kefuNoticeDTO);
+            KefuHandleDTO kefuHandleDTO = weChatService.readKfReceiveMsg(kefuNoticeDTO);
+
+            executor.execute(new Runnable() {
+                @SneakyThrows
+                @Override
+                public void run() {
+                    String data = kefuHandleDTO.getData();
+                    String fromUser = kefuHandleDTO.getFromUser();
+
+                    //是否开启连续对话,GPT4
+                    if (BaseConstant.isInChatArray(data)) {
+                        ChatFlowhandler(data, fromUser);
+                        return;
+                    }
+                    // 调openai
+                    String result = chatGptService.gptNewComplete(data, fromUser);
+                    kefuHandleDTO.setChatGptData(result);
+                    //给微信客服发消息
+                    String send = weChatService.sendKfMsg(kefuHandleDTO);
+                }
+            });
+            return kefuHandleDTO.getData();
+        } catch (Exception e) {
+            //验证URL失败，错误原因请查看异常
+            log.error("DecryptMsg msg error,e={}", e);
+            return "";
+        }
+    }
+
     private void ChatFlowhandler(String data, String fromUser) {
         String result = "";
         if (BaseConstant.CHAT_FLOW_OPEN.equals(data)) {
@@ -123,5 +208,24 @@ public class ChatGPTController {
             log.error("weChatService.sendMsg error,e={}", e);
         }
 
+    }
+
+    private String validateMessage(String msg_signature, String timestamp, String nonce, String echostr)
+            throws AesException {
+        WXBizMsgCrypt wxcpt = new WXBizMsgCrypt(baseConfig.getSToken(), baseConfig.getSEncodingAESKey(),
+                baseConfig.getSCorpID());
+
+        String sEchoStr = null;
+        try {
+            sEchoStr = wxcpt.VerifyURL(msg_signature, timestamp,
+                    nonce, echostr);
+            log.info("validateMessage echostr: " + sEchoStr);
+            // 验证URL成功，将sEchoStr返回
+            return sEchoStr;
+        } catch (Exception e) {
+            //验证URL失败，错误原因请查看异常
+            log.error("validateMessage error,e={}", e);
+            return "";
+        }
     }
 }

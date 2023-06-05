@@ -32,4 +32,7 @@ public class BaseConfig {
     @Value("${chatgpt.flow.num}")
     private Integer chatGptFlowNum;
 
+    @Value("${wechat.kfsecret}")
+    private String kfsecret;
+
 }

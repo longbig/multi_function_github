@@ -2,12 +2,17 @@
 运行环境：Java8，maven
 
 - ChatGPT接入企业微信成为聊天机器人
-- 羊了个羊无限通关，通关教程在公众号**卷福同学** 最新文章里，所用工具包在公众号里发送`羊了个羊`获取
+- 微信客服接入ChatGPT  
 - 有脚本运行问题可公众号内询问
 
 ![公众号二维码](https://raw.githubusercontent.com/longbig/multi_function_github/main/%E5%BE%AE%E4%BF%A1%E5%85%AC%E4%BC%97%E5%8F%B7.png)
 
 ## 脚本使用
+### 微信客服接入ChatGPT，外部群可用
+- 可在企业微信外部群使用，非企业人员也能用，只支持私聊
+- 使用教程：[【奶奶看了也不会】微信群聊(微信客服)接入ChatGPT教程](https://longbig.github.io/2023/06/05/%E5%BE%AE%E4%BF%A1%E5%AE%A2%E6%9C%8D%E6%8E%A5%E5%85%A5ChatGPT%E6%95%99%E7%A8%8B-%E5%A4%96%E9%83%A8%E7%BE%A4%E8%81%8A%E5%8F%AF%E7%94%A8/)
+
+
 ### ChatGPT 3.5 / 4接入企业微信
 - 修改application.properties文件的chatgpt开头 和wechat开头的配置，配置内容看注释
 - 默认访问超时时间是30s，如需修改，可自行修改`OkHttpUtils`中`DEFAULT_TIME_OUT`的值
@@ -19,8 +24,6 @@
 - 可修改application.properties文件里的`chatgpt.flow.num`配置，自行修改最大对话次数（不建议太大，官方限制的消息最大长度是4096 token，大概20次对话之后就会超了）
 
 ### 其他脚本使用
-- 羊了个羊：代码在YangService下，启动程序后，浏览器访问`http://localhost:8080/doc.html#/default/yang-service/getYangUsingGET`,
-  在参数cookie里写入t=【替换为抓包工具抓到的t值】，直接请求即可，抓包教程见公众号最新文章
 - 京东脚本：多个账号使用时,修改resources目录下的jd_cookie.txt文件,每行为pt_key,pt_pin的格式
 - 掘金脚本：修改application.properties文件的juejin.Cookie为你的掘金cookie
 
@@ -42,6 +45,7 @@
 - 运行`docker-compose up`运行上一步构建的镜像即可
 
 ## 更新
+- 2023.06.04 增加，微信客服对接ChatGPT的功能，支持企业外部微信群使用
 - 2023.05.06 更新，加上GPT4模型对话，修复ChatGPT消息长度过长，被微信截断的bug
 - 2023.03.05 更新，使用GPT3.5接入企业微信，且新增连续对话功能
 - 2023.02.27 修复ChatGPT接入企业微信未设置超时时间的bug
