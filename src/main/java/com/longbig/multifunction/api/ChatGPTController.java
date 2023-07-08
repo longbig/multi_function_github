@@ -41,6 +41,13 @@ public class ChatGPTController {
 
     private Executor executor = Executors.newCachedThreadPool();
 
+    @GetMapping("/chatGpt")
+    public String chatGpt(@RequestParam("text") String text) throws Exception {
+        log.info("chatGpt, text:{}", text);
+        String result = chatGptService.openAiComplete(text);
+        return result;
+    }
+
     /**
      * 企业微信三方应用验证消息接口
      * @param msg_signature
