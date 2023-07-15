@@ -18,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -100,7 +101,7 @@ public class ChatGPTController {
                     String fromUser = StringUtils.substringBetween(xmlcontent, "<FromUserName><![CDATA[", "]]></FromUserName>");
                     //是否开启连续对话,GPT4
                     if (BaseConstant.isInChatArray(data)) {
-                        ChatFlowhandler(data, fromUser);
+                        ChatFlowhandler(data, fromUser, null);
                         return;
                     }
                     // 调openai
@@ -175,7 +176,7 @@ public class ChatGPTController {
 
                     //是否开启连续对话,GPT4
                     if (BaseConstant.isInChatArray(data)) {
-                        ChatFlowhandler(data, fromUser);
+                        ChatFlowhandler(data, fromUser, kefuHandleDTO);
                         return;
                     }
                     // 调openai
@@ -193,7 +194,13 @@ public class ChatGPTController {
         }
     }
 
-    private void ChatFlowhandler(String data, String fromUser) {
+    /**
+     *
+     * @param data
+     * @param fromUser
+     * @param kefuHandleDTO 是否客服消息通道
+     */
+    private void ChatFlowhandler(String data, String fromUser, KefuHandleDTO kefuHandleDTO) {
         String result = "";
         if (BaseConstant.CHAT_FLOW_OPEN.equals(data)) {
             CacheHelper.setUserChatFlowOpen(fromUser);
@@ -210,7 +217,13 @@ public class ChatGPTController {
         }
 
         try {
-            String send = weChatService.sendMsg(result, fromUser);
+            if (Objects.isNull(kefuHandleDTO)) {
+                String send = weChatService.sendMsg(result, fromUser);
+            } else {
+                kefuHandleDTO.setChatGptData(result);
+                //给微信客服发消息
+                String send = weChatService.sendKfMsg(kefuHandleDTO);
+            }
         } catch (Exception e) {
             log.error("weChatService.sendMsg error,e={}", e);
         }
