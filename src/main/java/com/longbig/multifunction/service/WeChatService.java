@@ -88,11 +88,14 @@ public class WeChatService {
         }
 
         for (String s : msgList) {
+            // 对 s 中的 " 转义为 \"
+            s = s.replaceAll("\"", "\\\\\"");
+
             String body = "{\n" +
                     "   \"touser\" : \"" + touser + "\",\n" +
-                    "   \"msgtype\" : \"text\",\n" +
+                    "   \"msgtype\" : \"markdown\",\n" +
                     "   \"agentid\" : " + baseConfig.getAgentId() + ",\n" +
-                    "   \"text\" : {\n" +
+                    "   \"markdown\" : {\n" +
                     "       \"content\" : \"" + s + "\"\n" +
                     "   },\n" +
                     "   \"safe\":0,\n" +
